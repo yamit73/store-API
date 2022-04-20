@@ -1,6 +1,6 @@
 <?php
 namespace Api\Handlers;
-
+use Phalcon\Http\Response;
 use Products;
 
 /**
@@ -16,14 +16,65 @@ class Product
      * @param integer $page
      * @return array json
      */
-    function getProducts($limit=10,$page=1)
+    function getProductsWithLimit($limit=5,$page=1)
+    {   
+        $response=new Response();
+        $collection=new Products();
+        $result=$collection->getProductsWithlimit((int)$limit,(int)$page);
+        $products=[];
+        foreach ($result as $key=>$val) {
+            $products[$key]=json_decode(json_encode($val),true);
+        } 
+        $response->setStatusCode(200)
+                 ->setJsonContent($products)
+                 ->send();
+    }
+
+    /**
+     * To get all the products without any limit
+     *
+     * @return void
+     */
+    function getProducts()
     {
-     $collection=new Products();
-     $result=$collection->getProducts((int)$limit,(int)$page);
-     $products=[];
-     foreach ($result as $key=>$val) {
-        $products[$key]=json_decode(json_encode($val),true);
-     } 
-    return json_encode($products);
+        $response=new Response();
+        $collection=new Products();
+        $result=$collection->getProducts();
+        $products=[];
+        foreach ($result as $key=>$val) {
+            $products[$key]=json_decode(json_encode($val),true);
+        } 
+        $response->setStatusCode(200)
+                 ->setJsonContent($products)
+                 ->send();
+    }
+
+    /**
+     * Search keywords in product collection's name column
+     *
+     * @param [string] $keyword
+     * @return array, JSON array
+     */
+    public function search($keyword)
+    {
+        $response=new Response();
+        $collection=new Products();
+        
+        //Converting keyword to a proper format to search
+        $keys=explode('%20',$keyword);
+        $searchKeys=[];
+        foreach($keys as $key) {
+            array_push($searchKeys, ['name'=> new \MongoDB\BSON\Regex($key, 'i')]);
+        }
+
+        //Gettting data from database
+        $result=$collection->searchProduct($searchKeys);
+        $products=[];
+        foreach ($result as $key=>$val) {
+            $products[$key]=json_decode(json_encode($val),true);
+        } 
+        $response->setStatusCode(200)
+                 ->setJsonContent($products)
+                 ->send();
     }
 }

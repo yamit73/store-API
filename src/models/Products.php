@@ -30,23 +30,34 @@ class Products extends Model
     
         /**
          * To get details of all the products
+         * With limit and offset
          *
          * @return void
          */
-        public function getProducts($limit,$page)
+        public function getProductsWithLimit($limit,$page)
         {
             return $this->collection->find([],['limit'=>$limit, 'skip'=>($limit*($page-1))]);
         }
+
+         /**
+         * To get details of all the products
+         *
+         * @return void
+         */
+        public function getProducts()
+        {
+            return $this->collection->find();
+        }
     
         /**
-         * Search a product with name
+         * Search keywords and if matched return that document
          *
-         * @param [string] $product, product name
-         * @return array
+         * @param [array] $keys
+         * @return array  Products
          */
-        public function searchProduct($product)
+        public function searchProduct($keys)
         {
-            return $this->collection->find(['name' => $product]);
+            return $this->collection->find(['$or' => $keys]);
         }
 
 }

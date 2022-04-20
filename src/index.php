@@ -2,14 +2,22 @@
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 use Phalcon\Loader;
+use Phalcon\Events\Event;
+use Phalcon\Mvc\Application;
+use Phalcon\Events\Manager as EventsManager;
 
-$di=new FactoryDefault();
+$app=new Micro();
+//Vendor file
+require_once("./vendor/autoload.php");
+
 //Loader-----start----
 $loader=new Loader();
-require_once("./vendor/autoload.php");
+$di=new FactoryDefault();
+$application = new Application($di);
 $loader->registerNamespaces(
     [
-        'Api\Handlers'=>'./handlers'
+        'Api\Handlers'=>'./handlers',
+        'Api\Events'=>'./events',
     ]
 );
 $loader->registerDirs(
@@ -21,6 +29,15 @@ $loader->registerDirs(
 $loader->register();
 //loader-----end-------
 
+//Event ------start---------
+$eventsManager=new EventsManager();
+$eventsManager->attach(
+    'micro',
+    new \Api\Events\Authentication()
+);
+$app->before(
+    new \Api\Events\Authentication()
+);
 /**
  * Mongo DB container
  */
@@ -34,30 +51,54 @@ $di->set(
     },
     true
 );
-$prod=new \Api\Handlers\Product();
-
-$app=new Micro();
 
 /**
  * End point to get all the products 
- * request should consist limit, page
+ * if request consist limit, page no
  */
 $app->get(
     '/products/get/{limit}/{page}',
     [
-        $prod,
+        new \Api\Handlers\Product(),
+        'getProductsWithLimit'
+    ]
+);
+
+/**
+ * End point to get all the products 
+ */
+$app->get(
+    '/products/get&{token}',
+    [
+        new \Api\Handlers\Product(),
         'getProducts'
     ]
 );
 
 /**
+ * End point to search keywords
+ */
+$app->get(
+    '/products/search/{keyword}',
+    [
+        new \Api\Handlers\Product(),
+        'search'
+    ]
+);
+/**
  * End point to get api_access token
  */
 $app->get(
-    '/get/api_token',
+    '/get/api_token/{name}',
     [
         new \Api\Handlers\Token(),
         'getToken'
     ]
 );
-$app->handle($_SERVER["REQUEST_URI"]);
+$app->setEventsManager($eventsManager);
+
+try{
+    $app->handle($_SERVER["REQUEST_URI"]);
+} catch (Exception $e) {
+    echo $e->getMessage();
+}
