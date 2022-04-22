@@ -25,7 +25,7 @@ class Users extends Model
          */
         public function add($user)
         {
-            $this->collection->insertOne($user);
+            return $this->collection->insertOne($user)->getInsertedId();
         }
 
         public function findUser($user)

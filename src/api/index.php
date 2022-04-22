@@ -3,14 +3,14 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Micro;
 use Phalcon\Loader;
 use Phalcon\Events\Manager as EventsManager;
-
+use Phalcon\Session\Manager;
+use Phalcon\Session\Adapter\Stream;
 //Vendor file
 require_once("./vendor/autoload.php");
 
 //Loader-----start----
 $loader=new Loader();
 $di=new FactoryDefault();
-$app=new Micro($di);
 
 $loader->registerNamespaces(
     [
@@ -25,6 +25,9 @@ $loader->registerDirs(
     ]
 );
 $loader->register();
+
+$app=new Micro();
+
 //loader-----end-------
 
 //Event ------start---------
@@ -50,7 +53,28 @@ $di->set(
     },
     true
 );
+/**
+ * Di container
+ * Session
+ * Shared
+ */
+$di->set(
+    'session',
+    function () {
+        $session = new Manager();
+        $files = new Stream(
+            [
+                'savePath' => '/tmp',
+            ]
+        );
+        $session->setAdapter($files);
+        $session->start();
+        return $session;
+    },
+    true
+);
 
+$app->setDi($di);
 /**
  * End point to get all the products 
  * if request consist limit, page no

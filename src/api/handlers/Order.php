@@ -1,23 +1,14 @@
 <?php
 namespace Api\Handlers;
-
+use Phalcon\Di\Injectable;
 use Exception;
-use Phalcon\Http\Response;
-use Phalcon\Http\Request;
 use Orders;
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-
+use Products;
 /**
  * Class to handle the product related API call
  */
-class Order
+class Order extends Injectable
 {
-    public $collection;
-    public function initialize()
-    {
-        $this->collection=new Orders();
-    }
     /**
      * Create order
      *
@@ -26,35 +17,37 @@ class Order
     public function create()
     {
         try {
-            $request=new Request();
-            //Get token from query
-            $token = $request->getQuery('token');
-            //Token key
-            $key = "example_key";
-            //Decode token to get customer name
-            $decodedToken = JWT::decode($token, new Key($key, 'HS256'));
             $collection=new Orders();
-            $response=new Response();
-            //Get order details from POST
-            $order= json_decode(json_encode($request->getJsonRawBody()),true);
+            //Get order details from request body
+            $order= json_decode(json_encode($this->request->getJsonRawBody()),true);
             //Add default status as Paid and order date
             if (isset($order)) {
-                $order['customer_name']=$decodedToken->nam;
-                $order['status']='Paid';
-                $order['date']= new \MongoDB\BSON\UTCDateTime(new \DateTimeImmutable(date("Y-m-d H:i:s")));
-                //Create order in document
-                $collection->add($order);
-                $response->setStatusCode(200)
-                     ->setContent("Order Created")
-                     ->send();
+                $productModel= new Products();
+                //Ceck if product is present in the DB
+                if ($productModel->findProduct($order['product_id'])) {
+                    $order['customer_name']=CURRENT_USER_ID;
+                    $order['status']='Paid';
+                    $order['date']= new \MongoDB\BSON\UTCDateTime(new \DateTimeImmutable(date("Y-m-d H:i:s")));
+                    //Create order in document
+                    $orderId=$collection->add($order);
+                    $this->response->setStatusCode(200)
+                        ->setJsonContent(["message"=>"Order Created","order_id"=>(string)$orderId])
+                        ->send();
+                } else {
+                    //If product not found
+                    $this->response->setStatusCode(404)
+                        ->setJsonContent(["message"=>"product not found"])
+                        ->send();
+                }
             } else {
-                $response->setStatusCode(400)
-                     ->setContent("no data provided")
+                //If request body is empty
+                $this->response->setStatusCode(400)
+                     ->setJsonContent(["message"=>"no data provided"])
                      ->send();
             }
            
         } catch (Exception $e) {
-            $response->setStatusCode(401)
+            $this->response->setStatusCode(401)
                  ->setContent($e->getMessage())
                  ->send();
         }
@@ -69,15 +62,14 @@ class Order
      */
     function updateOrder($orderId, $status)
     {
+        $collection=new Orders();
         try {
-            $collection=new Orders();
-            $response=new Response();
             $collection->updateOrder($orderId,$status);
-            $response->setStatusCode(200)
+            $this->response->setStatusCode(200)
             ->setContent("Order Status updated!")
             ->send();
         } catch(Exception $e) {
-            $response->setStatusCode(401)
+            $this->response->setStatusCode(401)
                  ->setContent($e->getMessage())
                  ->send();
         }
@@ -89,14 +81,13 @@ class Order
      */
     function getOrders()
     {
-        $response=new Response();
         $collection=new Orders();
         $result=$collection->getOrders();
         $orders=[];
         foreach ($result as $key=>$val) {
             $orders[$key]=json_decode(json_encode($val),true);
         } 
-        $response->setStatusCode(200)
+        $this->response->setStatusCode(200)
                  ->setJsonContent($orders)
                  ->send();
     }

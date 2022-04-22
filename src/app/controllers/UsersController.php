@@ -8,7 +8,7 @@ class UsersController extends Controller
     /**
      * Constructor to initialize the object of users model
      *
-     * @var [type]
+     * @var [object]
      */
     public $collection;
     public function initialize()
@@ -45,7 +45,8 @@ class UsersController extends Controller
         if ($this->request->isPost()) {
             $user=$this->request->getPost();
             $user['role']='user';
-            $this->collection->add($user);
+            $userId=$this->collection->add($user);
+            // die($userId);
             $key = "example_key";
             $now = new \DateTimeImmutable();
             $payload = array(
@@ -53,8 +54,7 @@ class UsersController extends Controller
                 "nbf" => $now->modify('-1 minute')->getTimestamp(),
                 "exp" => $now->modify('+1 days')->getTimestamp(),
                 'sub' => 'api_token',
-                'nam' => $user['name'],
-                'ema' => $user['email'],
+                'uid' => (string)$userId,
                 'rol' => 'user',
             );
             $token = JWT::encode($payload, $key, 'HS256');

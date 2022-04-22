@@ -26,7 +26,7 @@ class Orders extends Model
          */
         public function add($order)
         {
-            $this->collection->insertOne($order);
+            return $this->collection->insertOne($order)->getInsertedId();
         }
     
         /**

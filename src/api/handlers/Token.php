@@ -5,7 +5,6 @@ use Firebase\JWT\JWT;
 /**
  * Class
  * To get api access token
- * To validate api token
  */
 class Token
 {
@@ -22,7 +21,7 @@ class Token
         $payload = array(
             "iat" => $now->getTimestamp(),
             "nbf" => $now->modify('-1 minute')->getTimestamp(),
-            "exp" => $now->modify('+1 hour')->getTimestamp(),
+            "exp" => $now->modify('+1 day')->getTimestamp(),
             'sub' => 'api_token',
             'nam' => $name
         );

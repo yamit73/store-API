@@ -60,4 +60,13 @@ class Products extends Model
             return $this->collection->find(['$or' => $keys]);
         }
 
+        public function findProduct($id)
+        {
+            $product=$this->collection->findOne(['_id' => new MongoDB\BSON\ObjectID($id)]);
+            if (isset($product->_id)) {
+                return true;
+            }
+            return false;
+        }
+
 }

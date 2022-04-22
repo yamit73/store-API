@@ -32,10 +32,9 @@ class Authentication implements MiddlewareInterface
             $token = $app->request->getQuery('token');
             if ($token != '') {
                 try {
-                    $key = "example_key";
                     $now = new \DateTimeImmutable();
                     /**
-                     * parsing token bearer
+                     * parsing token
                      */
                     $parser = new Parser();
                     $tokenObject = $parser->parse($token);
@@ -50,13 +49,18 @@ class Authentication implements MiddlewareInterface
                     /**
                      * decoding token using the same key that is used to encode
                      */
-                    $decodedToken = JWT::decode($token, new Key($key, 'HS256'));
+                    $decodedToken = JWT::decode($token, new Key("example_key", 'HS256'));
                     
-                    if ($decodedToken->sub != 'api_token' || $decodedToken->nam == '') {
+                    if ($decodedToken->sub != 'api_token' || $decodedToken->uid == '') {
                         $app->response->setStatusCode(400)
                             ->setJsonContent("Invalid token!")
                             ->send();
                         die;
+                    } else {
+                        //$app->session->set('currentUserId',$decodedToken->uid);
+                        if($action == 'create') {
+                            define('CURRENT_USER_ID',$decodedToken->uid);
+                        }
                     }
                 } catch (Exception $e) {
                     $app->response->setStatusCode(400)
@@ -65,7 +69,7 @@ class Authentication implements MiddlewareInterface
                     die;
                 }
             } else {
-                $app->response->setStatusCode(401, "Token not found")
+                $app->response->setStatusCode(404)
                     ->setJsonContent("Token not found")
                     ->send();
                 die;
