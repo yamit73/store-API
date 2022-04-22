@@ -1,0 +1,96 @@
+<h1 class="text-center text-success border-bottem">Products Update</h1>
+
+<div class="container">
+    <form class="w-75 m-auto" method="POST" id="form-add-product">
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" value="<?php echo $product['name'] ?>" name="name" placeholder="Name">
+            <label for="name">Name</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" value="<?php echo $product['category'] ?>" name="category" placeholder="Category Name">
+            <label for="category">Category Name</label>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control" value="<?php echo $product['price'] ?>" name="price" placeholder="Price">
+                    <label for="price">Price</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control" value="<?php echo $product['stock'] ?>" name="stock" placeholder="Name">
+                    <label for="stock">Stock</label>
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 text-center" id="meta-fields">
+            <h4 class="d-inline">Meta</h4>
+            <?php
+                $metaId=1;
+                foreach ($product['meta'] as $val) {
+                    foreach ($val as $key => $v) {
+                        echo ' <div class="row" id="meta'.$metaId.'">
+                            <div class="col">
+                                <div class="form-floating mt-3">
+                                    <input type="text" class="form-control" value="'.$key.'" name="lableName'.$metaId.'" placeholder="Price">
+                                    <label for="price">lable name'.$metaId.'</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-floating mt-3">
+                                    <input type="text" class="form-control" value="'.$v.'" name="lableValue'.$metaId.'" placeholder="Name">
+                                    <label for="stock">lable value</label>
+                                </div>
+                            </div>
+                        </div>';
+                        $metaId += 1;
+                    }
+                }
+                echo '<input type="hidden" name="noOfMetaFields" value="'.$metaId.'">';
+            ?>
+        </div>
+        <div class="mt-5 text-center" id="variation-fields">
+            <h4 class="d-inline">Variation</h4>
+            <?php
+                $variationId=1;
+                foreach ($product['variation'] as $val) {
+                    $variation=array();
+                    foreach ($val as $key => $v) {
+                        if($key != 'price') {
+                            echo '<div class="row" id="variation'.$variationId.'">
+                                <div class="col">
+                                    <div class="form-floating mt-3" >
+                                        <input type="text" class="form-control" value="'.$key.'" name="variationKey'.$variationId.'" placeholder="variation name">
+                                        <label for="stock">Variation Field'.$variationId.'</label>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-floating mt-3">
+                                        <input type="text" class="form-control" value="'.$v.'" name="variationValue'.$variationId.'" placeholder="variation value">
+                                        <label for="stock">Value</label>
+                                    </div>
+                                </div>';
+                            $variationId += 1;
+                            
+                        } else {
+                            
+                            echo '<div class="col">
+                                        <div class="form-floating mt-3">
+                                            <input type="text" class="form-control" value="'.$v.'" name="variationprice'.($variationId-1).'" placeholder="variation price">
+                                            <label for="stock">Price</label>
+                                        </div>
+                                    </div>
+                                </div>';
+                        }
+                    }
+                }
+                echo '<input type="hidden" name="noOfVariationFields" value="'.$variationId.'">'
+            ?>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Update Product</button>
+    </form>
+</div>
+<?php
+// echo '<pre>';
+// print_r($product);

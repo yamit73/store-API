@@ -1,0 +1,24 @@
+<main class="form-signin w-25 m-auto text-center">
+    <form method="POST">
+        <h1 class="h3 mb-3 fw-normal">Create WEb Hooks</h1>
+
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" name="name" placeholder="Enter hook name" required>
+            <label for="name">WebHook Name</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" name="events" placeholder="Events" required>
+            <label for="events">Events</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" name="url" placeholder="Url" required>
+            <label for="url">URL</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" name="key" placeholder="key" required>
+            <label for="key">Secret Key</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">Create Hook</button>
+
+    </form>
+</main>

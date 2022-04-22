@@ -49,7 +49,7 @@ $di->set(
     function () {
         $mongo = new \MongoDB\Client("mongodb://mongo", array("username"=>'root', "password"=>'password123'));
 
-        return $mongo->store;
+        return $mongo->store_api;
     },
     true
 );

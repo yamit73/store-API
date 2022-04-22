@@ -16,7 +16,20 @@
 
 <body>
     <div class="container-fluid">
-
+        <div class="mt-2 text-center border-bottom pb-3 shadow mb-3">
+        <?php
+            if (isset($this->session->userId)){
+                echo '<h2 class="text-primary d-inline">'.$this->session->userName.'</h2>';
+                echo '<a href="/app/users/logout" class="mx-3 btn btn-sm btn-outline-danger">logout</a>';
+            } else {
+                echo '<a href="/app/users/login" class="btn btn-sm btn-outline-dark mx-1">Login</a>';
+            }
+            
+        ?>
+            <a href="/app/webHook" class="btn btn-sm btn-outline-dark mx-1">Create Web Hooks</a>
+            <a href="/app/admin/orders" class="btn btn-sm btn-outline-dark mx-1">Orders</a>
+            <a href="/app/admin/products" class="btn btn-sm btn-outline-dark mx-1">Products</a>
+        </div>
         <?php echo $this->getContent(); ?>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
