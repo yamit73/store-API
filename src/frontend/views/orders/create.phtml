@@ -1,0 +1,22 @@
+<main class="form-signin w-25 m-auto text-center">
+    <form method="POST">
+        <h1 class="h3 mb-3 fw-normal">Create Order</h1>
+
+        <select class="form-select" name="product_id" aria-label="Default select example">
+            <option value=""></option>
+            <?php
+                foreach($products as $product) {
+                    echo '<option value="'.$product['_id']['$oid'].'">'.$product['name'].'</option>';
+                }
+            ?>
+            <option value="1">One</option>
+
+        </select>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" name="quantity" placeholder="Quantity" required>
+            <label for="quantity">Quantity</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary mt-3" type="submit">Create</button>
+
+    </form>
+</main>

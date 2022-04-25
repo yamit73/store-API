@@ -28,7 +28,7 @@ class UsersController extends Controller
             $this->session->set('userId', $user->_id);
             $this->session->set('userName', $user->name);
             $this->session->set('userRole', $user->role);
-            $this->response->redirect('/app/admin/orders');
+            $this->response->redirect('/app/orders');
         }
     }
 

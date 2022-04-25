@@ -25,7 +25,7 @@ class Products extends Model
      */
     public function add($product)
     {
-        $this->collection->insertOne($product);
+        return ($this->collection->insertOne($product))->getInsertedId();
     }
 
     /**
@@ -63,6 +63,6 @@ class Products extends Model
      */
     public function updateProduct($product, $id)
     {
-        $this->collection->updateOne(['_id' => new MongoDB\BSON\ObjectID($id)], ['$set' => $product]);
+        return ($this->collection->updateOne(['_id' => new MongoDB\BSON\ObjectID($id)], ['$set' => $product]))->getModifiedCount();
     }
 }

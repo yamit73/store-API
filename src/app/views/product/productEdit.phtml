@@ -1,0 +1,32 @@
+<h1 class="text-center text-success border-bottem">Products Update</h1>
+
+<div class="container">
+    <form class="w-75 m-auto" method="POST" id="form-add-product">
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" value="<?php echo $product['name'] ?>" name="name" placeholder="Name">
+            <label for="name">Name</label>
+        </div>
+        <div class="form-floating mt-3">
+            <input type="text" class="form-control" value="<?php echo $product['category'] ?>" name="category" placeholder="Category Name">
+            <label for="category">Category Name</label>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control" value="<?php echo $product['price'] ?>" name="price" placeholder="Price">
+                    <label for="price">Price</label>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating mt-3">
+                    <input type="text" class="form-control" value="<?php echo $product['stock'] ?>" name="stock" placeholder="Name">
+                    <label for="stock">Stock</label>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Update Product</button>
+    </form>
+</div>
+<?php
+// echo '<pre>';
+// print_r($product);

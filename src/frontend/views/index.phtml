@@ -17,9 +17,19 @@
 <body>
     <div class="container-fluid">
         <div class="mt-2 text-center border-bottom pb-3 shadow mb-3">
-            <a href="/app/users/login" class="btn btn-sm btn-outline-primary mx-1">Login</a>
-            <a href="/app/webHook" class="btn btn-sm btn-outline-primary mx-1">Create Web Hooks</a>
-            <a href="/app/admin/orders" class="btn btn-sm btn-outline-primary mx-1">Orders</a>
+        <?php
+            if (isset($this->frontendSession->userId)){
+                echo '<h2 class="text-primary d-inline">'.$this->frontendSession->userName.'</h2>';
+                echo '<a href="/frontend/users/logout" class="mx-3 btn btn-sm btn-outline-danger">logout</a>';
+            } else {
+                echo '<a href="/frontend/users/login" class="btn btn-sm btn-outline-dark mx-1">Login</a>';
+            }
+            
+        ?>
+            <a href="/frontend/webHook" class="btn btn-sm btn-outline-dark mx-1">Create Web Hooks</a>
+            <a href="/frontend/products" class="btn btn-sm btn-outline-dark mx-1">Products</a>
+            <a href="/frontend/orders" class="btn btn-sm btn-outline-dark mx-1">Orders</a>
+            <a href="/frontend/orders/create" class="btn btn-sm btn-outline-dark mx-1">Create Order</a>
         </div>
         <?php echo $this->getContent(); ?>
     </div>

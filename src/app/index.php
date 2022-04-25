@@ -5,6 +5,8 @@ use Phalcon\Di\FactoryDefault;
 use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Application;
+use Phalcon\Events\Manager as EventsManager;
+use GuzzleHttp\Client;
 use Phalcon\Url;
 /**
  * Required classes for session
@@ -22,6 +24,16 @@ require_once("./vendor/autoload.php");
 
 //Loader-----start----
 $loader = new Loader();
+
+/**
+ * Register namespace
+ */
+$loader->registerNamespaces(
+    [
+        'App\Components'=>'./components',
+        'App\Events'=>'./events'
+    ]
+);
 /**
  * Registering controllers and models dir
  */
@@ -89,8 +101,39 @@ $container->setShared(
         return $session;
     }
 );
+
+//Di container for guzzle client
+$container->set(
+    'appClient',
+    function() {
+        $client = new Client([
+            // Base URI is used with relative requests
+        ]);
+        return $client;
+    },
+    true
+);
 //Creating object of application class
 $application = new Application($container);
+
+//Event manager
+$eventsManager=new EventsManager();
+$eventsManager->attach(
+    'event',
+    new \App\Events\EventListener()
+);
+$application->setEventsManager($eventsManager);
+$container->set(
+    'EventsManager',
+    $eventsManager
+);
+
+$container->setShared(
+    'components',
+    function () {
+        return new \App\Components\Helper();
+    }
+);
 
 try {
     // Handle the request

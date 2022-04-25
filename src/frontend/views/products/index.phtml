@@ -1,0 +1,29 @@
+<h1 class="text-center text-success border-bottem">Products Dashboard</h1>
+
+<div class="container-fluid">
+    <div class="row">
+    <?php
+            foreach ($products as $product) {
+                echo '<div class="col mt-3">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">' . $product->name . '</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">Category: ' . $product->category . '</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">Price: ' . $product->price . '</h6>';
+                if ((int)$product['stock']>0) {
+                    echo ' <a href="#" class="btn btn-sm btn-outline-primary">Add to cart</a>';
+                } else {
+                    echo ' <a href="#" class="btn btn-sm btn-warning" disabled>Out of Stock</a>';
+                }
+                               
+                echo   '</div>
+                    </div>
+                </div>';
+            }
+            ?>
+        
+    </div>
+</div>
+<pre>
+    <?php
+    // print_r($products);

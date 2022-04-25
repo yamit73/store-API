@@ -24,6 +24,14 @@ require_once("./vendor/autoload.php");
 //Loader-----start----
 $loader = new Loader();
 /**
+ * Register namespace
+ */
+$loader->registerNamespaces(
+    [
+        'Frontend\Components'=>'./components'
+    ]
+);
+/**
  * Registering controllers and models dir
  */
 $loader->registerDirs(
@@ -59,6 +67,15 @@ $container->set(
     }
 );
 /**
+ * Components Di
+ */
+$container->setShared(
+    'components',
+    function () {
+        return new \Frontend\Components\Helper();
+    }
+);
+/**
  * Mongo DB container
  */
 
@@ -66,18 +83,29 @@ $container->set(
     'mongo',
     function () {
         $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => 'root', "password" => 'password123'));
+        return $mongo->store_api_frontend;
+    },
+    true
+);
+/**
+ * Mongo DB container for backend
+ */
 
+$container->set(
+    'mongoBackend',
+    function () {
+        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => 'root', "password" => 'password123'));
         return $mongo->store_api;
     },
     true
 );
 //Di container for guzzle client
 $container->set(
-    'client',
+    'clients',
     function() {
         $client = new Client([
             // Base URI is used with relative requests
-            'base_uri' => 'http://localhost:8080/api/',
+            'base_uri' => '192.168.2.50:8080/api/',
         ]);
         return $client;
     },
@@ -89,7 +117,7 @@ $container->set(
  * Shared
  */
 $container->setShared(
-    'session',
+    'frontendSession',
     function () {
         $session = new Manager();
         $files = new Stream(

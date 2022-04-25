@@ -11,9 +11,11 @@ class UsersController extends Controller
      * @var [object]
      */
     public $collection;
+    public $helper;
     public function initialize()
     {
         $this->collection = new Users();
+        $this->helper = new \Frontend\Components\Helper();
     }
     /**
      * user login function
@@ -24,11 +26,13 @@ class UsersController extends Controller
     public function loginAction()
     {
         if ($this->request->isPost()) {
-            $user=$this->collection->findUser($this->request->getPost());
-            $this->session->set('userId', $user->_id);
-            $this->session->set('userName', $user->name);
-            $this->session->set('userRole', $user->role);
-            $this->response->redirect('/app/admin/orders');
+            $escaper=new \Frontend\Components\MyEscaper();
+            $user=$escaper->sanitize($this->request->getpost());
+            $user=$this->collection->findUser($user);
+            $this->frontendSession->set('userId', $user->_id);
+            $this->frontendSession->set('userName', $user->name);
+            $this->frontendSession->set('userRole', $user->role);
+            $this->response->redirect('/frontend/orders');
         }
     }
 
@@ -41,22 +45,16 @@ class UsersController extends Controller
     public function signupAction()
     {
         if ($this->request->isPost()) {
-            $user=$this->request->getPost();
+            $escaper=new \Frontend\Components\MyEscaper();
+            $user=$escaper->sanitize($this->request->getpost());
             $user['role']='user';
             $userId=$this->collection->add($user);
-            // die($userId);
-            $key = "example_key";
-            $now = new \DateTimeImmutable();
-            $payload = array(
-                "iat" => $now->getTimestamp(),
-                "nbf" => $now->modify('-1 minute')->getTimestamp(),
-                "exp" => $now->modify('+1 days')->getTimestamp(),
-                'sub' => 'api_token',
-                'uid' => (string)$userId,
-                'rol' => 'user',
-            );
-            $token = JWT::encode($payload, $key, 'HS256');
-            $this->view->token = $token;
+            if (isset($userId)) {
+                $this->view->token = $this->helper->getToken((string)$userId);
+            } else {
+                $this->view->token= "Something went wrong user not created!";
+            }
+            
         }
     }
     /**
@@ -66,7 +64,7 @@ class UsersController extends Controller
      */
     public function logoutAction()
     {
-        $this->session->destroy();
-        $this->response->redirect('/app/users/login');
+        $this->frontendSession->destroy();
+        $this->response->redirect('/frontend/users/login');
     }
 }
