@@ -32,7 +32,7 @@ class UsersController extends Controller
             $this->frontendSession->set('userId', $user->_id);
             $this->frontendSession->set('userName', $user->name);
             $this->frontendSession->set('userRole', $user->role);
-            $this->response->redirect('/frontend/orders');
+            $this->response->redirect('/frontend/products');
         }
     }
 

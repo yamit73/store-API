@@ -11,6 +11,11 @@ class WebHookController extends Controller
         $this->helper= new \App\Components\Helper();
         $this->collection= new WebHooks();
     }
+    /**
+     * Add hooks to database
+     *
+     * @return void
+     */
     public function indexAction()
     {
         //Check if User is logged in
@@ -19,7 +24,6 @@ class WebHookController extends Controller
         }
         if ($this->request->isPost()) {
             $this->collection->add($this->request->getpost());
-            return "Success";
         }
     }
 }

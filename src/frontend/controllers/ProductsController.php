@@ -29,16 +29,18 @@ class ProductsController extends Controller
     {
        $this->view->products=$this->collection->getProducts();
     }
-
+    
     /**
      * Get all products from API and add it to the database
-     *
+     *Uncomment below function to add all the products in your DB for the first time
      * @return void
      */
+
+    /*
     public function addAction()
     {
         try {
-            $token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTA4NjI4OTMsIm5iZiI6MTY1MDg2MjgzMywiZXhwIjoxNjUwOTQ5MjkzLCJzdWIiOiJhcGlfdG9rZW4iLCJ1aWQiOiI2MjY2MmIyZDQ1Y2I0MDc1ZjIwMjFhMDIiLCJyb2wiOiJ1c2VyIn0.hhhjiwDQ4tJA-484aUUKbeYnCHIciZ1duR8iNmDqgL8';
+            $token=$this->di->get('config')->get('api')->get('token');
             $response = $this->client->request('GET', 'products/get&token='.$token.'');
             $products=json_decode($response->getBody(),true);
             foreach($products as $key => $product) {
@@ -49,4 +51,5 @@ class ProductsController extends Controller
             die($e->getMessage());
         }
     }
+    */
 }

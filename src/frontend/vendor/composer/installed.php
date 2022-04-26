@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'e537db86dfc66546e09b9472e9e207e604471800',
+        'reference' => '39e465ed8c14b2debd7e82e3bae0c1f41a7ce2a9',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,16 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'e537db86dfc66546e09b9472e9e207e604471800',
+            'reference' => '39e465ed8c14b2debd7e82e3bae0c1f41a7ce2a9',
+            'dev_requirement' => false,
+        ),
+        'fabfuel/prophiler' => array(
+            'pretty_version' => '1.6.0',
+            'version' => '1.6.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../fabfuel/prophiler',
+            'aliases' => array(),
+            'reference' => '3b8cbc54b6181844abeeba57a44e0b2b2ea3da9c',
             'dev_requirement' => false,
         ),
         'firebase/php-jwt' => array(
@@ -117,6 +126,15 @@
             'provided' => array(
                 0 => '1.0',
             ),
+        ),
+        'psr/log' => array(
+            'pretty_version' => '1.1.4',
+            'version' => '1.1.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/log',
+            'aliases' => array(),
+            'reference' => 'd49695b909c3b7628b6289db5479a1c204601f11',
+            'dev_requirement' => false,
         ),
         'ralouphie/getallheaders' => array(
             'pretty_version' => '3.0.3',

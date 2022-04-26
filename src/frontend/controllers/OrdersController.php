@@ -26,22 +26,25 @@ class OrdersController extends Controller
         $order= new Orders();
         $this->view->orders=$order->getOrders();
     }
+
+    /**
+     * Function to create order using API request
+     *
+     * @return void
+     */
     public function createAction()
     {
         if (!$this->helper->userLogin()) {
             $this->response->redirect('/frontend/users/login');
         }
-        $token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTA4NjI4OTMsIm5iZiI6MTY1MDg2MjgzMywiZXhwIjoxNjUwOTQ5MjkzLCJzdWIiOiJhcGlfdG9rZW4iLCJ1aWQiOiI2MjY2MmIyZDQ1Y2I0MDc1ZjIwMjFhMDIiLCJyb2wiOiJ1c2VyIn0.hhhjiwDQ4tJA-484aUUKbeYnCHIciZ1duR8iNmDqgL8';
+        $token=$this->config->get('api')->get('token');
         $response = $this->client->request('GET', 'products/get&token='.$token.'');
         $this->view->products = json_decode($response->getBody(), true);
 
         if ($this->request->isPost()) {
             $data=json_encode($this->request->getPost());
-            $headers = [
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json'
-            ];
-            $response = $this->client->request('POST', 'orders/create?token='.$token.'', ['headers' => $headers, 'body' => $data]);
+            $headers = $this->config->get('api')->get('headers');
+            $response = $this->client->request('POST', 'orders/create?token='.$token.'', ['headers' => json_decode(json_encode($headers),true), 'body' => $data]);
         }
     }
 }

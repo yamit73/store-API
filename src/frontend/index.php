@@ -6,12 +6,23 @@ use Phalcon\Loader;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\Application;
 use Phalcon\Url;
+use Phalcon\Config;
+use Phalcon\Config\ConfigFactory;
 /**
  * Required classes for session
  */
 use Phalcon\Session\Manager;
 use Phalcon\Session\Adapter\Stream;
 use GuzzleHttp\Client;
+/**
+ * Phalcon Debug
+ */
+use \Phalcon\Debug;
+(new Debug())->listen();
+
+$config = new Config([]);
+
+$container = new FactoryDefault();
 
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
@@ -43,7 +54,6 @@ $loader->registerDirs(
 $loader->register();
 //loader-----end-------
 
-$container = new FactoryDefault();
 /**
  * Di container for view
  */
@@ -75,14 +85,29 @@ $container->setShared(
         return new \Frontend\Components\Helper();
     }
 );
+
+/**
+ * Container for config 
+ * Contains neccessory variables
+ */
+$container->set(
+    'config',
+    function () {
+        $file='./config/config.php';
+        $factory=new ConfigFactory();
+        return $factory->newInstance('php', $file);
+    }
+);
+
+
 /**
  * Mongo DB container
  */
-
 $container->set(
     'mongo',
     function () {
-        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => 'root', "password" => 'password123'));
+        $config=$this->get('config')->db;
+        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => $config->username, "password" => $config->password));
         return $mongo->store_api_frontend;
     },
     true

@@ -15,18 +15,31 @@
 </head>
 
 <body>
+    <?php
+
+    //Prophiler -------------------Start-------------------------------------
+
+    $profiler = new \Fabfuel\Prophiler\Profiler();
+    //Registering prophiler 
+    $toolbar = new \Fabfuel\Prophiler\Toolbar($profiler);
+    $toolbar->addDataCollector(new \Fabfuel\Prophiler\DataCollector\Request());
+    echo $toolbar->render();
+    //Prophiler ------------------------end----------------------------------------
+
+
+    ?>
     <div class="container-fluid">
         <div class="mt-2 text-center border-bottom pb-3 shadow mb-3">
             <h1>App</h1>
-        <?php
-            if (isset($this->session->userId)){
-                echo '<h2 class="text-primary d-inline">'.$this->session->userName.'</h2>';
+            <?php
+            if (isset($this->session->userId)) {
+                echo '<h2 class="text-primary d-inline">' . $this->session->userName . '</h2>';
                 echo '<a href="/app/users/logout" class="mx-3 btn btn-sm btn-outline-danger">logout</a>';
             } else {
                 echo '<a href="/app/users/login" class="btn btn-sm btn-outline-dark mx-1">Login</a>';
             }
-            
-        ?>
+
+            ?>
             <a href="/app/order" class="btn btn-sm btn-outline-dark mx-1">Orders</a>
             <a href="/app/product" class="btn btn-sm btn-outline-dark mx-1">Products</a>
             <a href="/app/webHook" class="btn btn-sm btn-outline-dark mx-1">Create Web Hooks</a>

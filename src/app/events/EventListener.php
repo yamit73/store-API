@@ -24,13 +24,10 @@ class EventListener extends Injectable
     {
         $hooksCollection=new WebHooks;
         $hooks=$hooksCollection->getHooks("Product.stock");
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ];
+        $headers =$this->config->get('client')->get('headers');
          foreach($hooks as $hook) {
             $client = new Client(['base_uri'=>$hook->url]);
-            $client->request('POST',"", ['headers' => $headers, 'body' => json_encode($data)]);
+            $client->request('POST',"", ['headers' => json_decode(json_encode($headers),true), 'body' => json_encode($data)]);
         }
     }
 
@@ -47,13 +44,10 @@ class EventListener extends Injectable
     {
         $hooksCollection=new WebHooks;
         $hooks=$hooksCollection->getHooks("Product.add");
-        $headers = [
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json'
-        ];
+        $headers = $this->config->get('client')->get('headers');
          foreach($hooks as $hook) {
             $client = new Client(['base_uri'=>$hook->url]);
-            $client->request('POST',"", ['headers' => $headers, 'body' => json_encode($product)]);
+            $client->request('POST',"", ['headers' => json_decode(json_encode($headers),true), 'body' => json_encode($product)]);
         }
     }
 }

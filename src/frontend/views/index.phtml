@@ -15,17 +15,29 @@
 </head>
 
 <body>
+    <?php
+    // Prophiler -------------------Start-------------------------------------
+    $profiler = new \Fabfuel\Prophiler\Profiler();
+    //Registering prophiler 
+    $toolbar = new \Fabfuel\Prophiler\Toolbar($profiler);
+    $toolbar->addDataCollector(new \Fabfuel\Prophiler\DataCollector\Request());
+    echo $toolbar->render();
+
+    //Prophiler ------------------------end----------------------------------------
+
+    ?>
     <div class="container-fluid">
         <div class="mt-2 text-center border-bottom pb-3 shadow mb-3">
-        <?php
-            if (isset($this->frontendSession->userId)){
-                echo '<h2 class="text-primary d-inline">'.$this->frontendSession->userName.'</h2>';
+            <h1>Front-End</h1>
+            <?php
+            if (isset($this->frontendSession->userId)) {
+                echo '<h2 class="text-primary d-inline">' . $this->frontendSession->userName . '</h2>';
                 echo '<a href="/frontend/users/logout" class="mx-3 btn btn-sm btn-outline-danger">logout</a>';
             } else {
                 echo '<a href="/frontend/users/login" class="btn btn-sm btn-outline-dark mx-1">Login</a>';
             }
-            
-        ?>
+
+            ?>
             <a href="/frontend/products" class="btn btn-sm btn-outline-dark mx-1">Products</a>
             <a href="/frontend/orders" class="btn btn-sm btn-outline-dark mx-1">Orders</a>
             <a href="/frontend/orders/create" class="btn btn-sm btn-outline-dark mx-1">Create Order</a>

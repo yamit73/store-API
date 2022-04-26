@@ -22,7 +22,6 @@ class ProductHookController extends Controller
         if ($this->request->isPost()) {
             $data=json_decode(json_encode($this->request->getJsonRawBody()),true);
             $this->collection->updateProduct($data);
-            
         }
     }
 

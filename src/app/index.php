@@ -8,11 +8,18 @@ use Phalcon\Mvc\Application;
 use Phalcon\Events\Manager as EventsManager;
 use GuzzleHttp\Client;
 use Phalcon\Url;
+use \Phalcon\Debug;
 /**
  * Required classes for session
  */
 use Phalcon\Session\Manager;
 use Phalcon\Session\Adapter\Stream;
+use Phalcon\Config;
+use Phalcon\Config\ConfigFactory;
+
+$config = new Config([]);
+
+(new Debug())->listen();
 
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
@@ -24,6 +31,7 @@ require_once("./vendor/autoload.php");
 
 //Loader-----start----
 $loader = new Loader();
+$container = new FactoryDefault();
 
 /**
  * Register namespace
@@ -46,7 +54,19 @@ $loader->registerDirs(
 $loader->register();
 //loader-----end-------
 
-$container = new FactoryDefault();
+/**
+ * Container for config 
+ * Contains neccessory variables
+ */
+$container->set(
+    'config',
+    function () {
+        $file='./config/config.php';
+        $factory=new ConfigFactory();
+        return $factory->newInstance('php', $file);
+    }
+);
+
 /**
  * Di container for view
  */
@@ -76,8 +96,8 @@ $container->set(
 $container->set(
     'mongo',
     function () {
-        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => 'root', "password" => 'password123'));
-
+        $config=$this->get('config')->db;
+        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => $config->username, "password" => $config->password));
         return $mongo->store_api;
     },
     true
