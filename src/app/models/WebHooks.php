@@ -27,9 +27,4 @@ class WebHooks extends Model
         {
             return $this->collection->insertOne($hook)->getInsertedId();
         }
-
-        public function getHooks($event)
-        {
-            return $this->collection->find(['events' => ['$eq' => $event]]);
-        }
 }

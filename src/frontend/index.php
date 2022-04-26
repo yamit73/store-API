@@ -87,18 +87,7 @@ $container->set(
     },
     true
 );
-/**
- * Mongo DB container for backend
- */
 
-$container->set(
-    'mongoBackend',
-    function () {
-        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => 'root', "password" => 'password123'));
-        return $mongo->store_api;
-    },
-    true
-);
 //Di container for guzzle client
 $container->set(
     'clients',

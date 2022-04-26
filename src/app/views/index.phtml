@@ -17,6 +17,7 @@
 <body>
     <div class="container-fluid">
         <div class="mt-2 text-center border-bottom pb-3 shadow mb-3">
+            <h1>App</h1>
         <?php
             if (isset($this->session->userId)){
                 echo '<h2 class="text-primary d-inline">'.$this->session->userName.'</h2>';
@@ -28,6 +29,7 @@
         ?>
             <a href="/app/order" class="btn btn-sm btn-outline-dark mx-1">Orders</a>
             <a href="/app/product" class="btn btn-sm btn-outline-dark mx-1">Products</a>
+            <a href="/app/webHook" class="btn btn-sm btn-outline-dark mx-1">Create Web Hooks</a>
             <a href="/app/product/add" class="btn btn-sm btn-outline-dark mx-1">Product Add</a>
         </div>
         <?php echo $this->getContent(); ?>

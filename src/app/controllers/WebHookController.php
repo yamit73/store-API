@@ -4,11 +4,22 @@ use Phalcon\Mvc\Controller;
 
 class WebHookController extends Controller
 {
+    public $helper;
+    public $collection;
+    function initialize()
+    {
+        $this->helper= new \App\Components\Helper();
+        $this->collection= new WebHooks();
+    }
     public function indexAction()
     {
         //Check if User is logged in
-        if (!isset($this->session->userId)) {
-            $this->response->redirect('/app/users/login');
+        if (!$this->helper->userLogin()) {
+            $this->response->redirect('/frontend/users/login');
+        }
+        if ($this->request->isPost()) {
+            $this->collection->add($this->request->getpost());
+            return "Success";
         }
     }
 }
