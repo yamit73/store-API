@@ -1,26 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Controller;
-class OrderController extends Controller
+
+final class OrderController extends Controller
 {
-    public $helper;
-    public $collection;
-    function initialize()
+    public function initialize(): void
     {
-        $this->helper= new \App\Components\Helper();
-        $this->collection=new Orders;
+        $this->helper = new \App\Components\Helper();
+        $this->collection = new Orders();
     }
     /**
      * Order listing to admin
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         // echo $helper->userLogin();die;
         if (!$this->helper->userLogin()) {
             $this->response->redirect('/app/users/login');
         }
-        $this->view->orders=$this->collection->getOrders();
+        $this->view->orders = $this->collection->getOrders();
     }
 }

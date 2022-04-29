@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '39e465ed8c14b2debd7e82e3bae0c1f41a7ce2a9',
+        'reference' => '77c7f1833785dbdd82069d13de12e1e094c6757e',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '39e465ed8c14b2debd7e82e3bae0c1f41a7ce2a9',
+            'reference' => '77c7f1833785dbdd82069d13de12e1e094c6757e',
             'dev_requirement' => false,
         ),
         'fabfuel/prophiler' => array(
@@ -81,6 +81,15 @@
             'aliases' => array(),
             'reference' => 'e4a7594ac4b31635fa77455c4038a7013024ba28',
             'dev_requirement' => false,
+        ),
+        'phpstan/phpstan' => array(
+            'pretty_version' => '1.6.2',
+            'version' => '1.6.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpstan/phpstan',
+            'aliases' => array(),
+            'reference' => 'becb9603a31d70f5007d505877a7b812598dfe46',
+            'dev_requirement' => true,
         ),
         'psr/http-client' => array(
             'pretty_version' => '1.0.1',

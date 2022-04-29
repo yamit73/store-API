@@ -1,35 +1,44 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Model;
 
-class WebHooks extends Model
+final class WebHooks extends Model
 {
-        //Collection
-        public $collection;
-        /**
-         * Constructor to initialize the collection
-         *
-         * @return void
-         */
-        public function initialize()
-        {
-            $this->collection=$this->di->get('mongo')->hooks;
-        }
-    
-        /**
-         * Add user to collection
-         *
-         * @param [array] $user
-         * takes user information as array
-         * @return void
-         */
-        public function add($hook)
-        {
-            return $this->collection->insertOne($hook)->getInsertedId();
-        }
-
-        public function getHooks($event)
-        {
-            return $this->collection->find(['events' => ['$eq' => $event]]);
-        }
+    /**
+     * Constructor to initialize the collection
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        $this->collection = $this->di->get('mongo')->hooks;
+    }
+    /**
+     * Add hooks to database
+     *
+     * @param array $hook
+     * @return string
+     */
+    public function add(array $hook)
+    {
+        return $this->collection->insertOne($hook)->getInsertedId();
+    }
+    /**
+     * get hook by evens name
+     *
+     * @param string $event
+     * @return array
+     */
+    public function getHooks(string $event)
+    {
+        return $this->collection->find(
+            [
+                'events' => [
+                    '$eq' => $event,
+                ],
+            ]
+        );
+    }
 }

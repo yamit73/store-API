@@ -1,18 +1,17 @@
 <?php
 
-use Phalcon\Mvc\Controller;
-use Firebase\JWT\JWT;
+declare(strict_types=1);
 
-class UsersController extends Controller
+use Phalcon\Mvc\Controller;
+
+final class UsersController extends Controller
 {
     /**
      * Constructor to initialize the object of users model
      *
-     * @var [object]
+     * @return void
      */
-    public $collection;
-    public $helper;
-    public function initialize()
+    public function initialize(): void
     {
         $this->collection = new Users();
         $this->helper = new \Frontend\Components\Helper();
@@ -23,12 +22,12 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function loginAction()
+    public function loginAction(): void
     {
         if ($this->request->isPost()) {
-            $escaper=new \Frontend\Components\MyEscaper();
-            $user=$escaper->sanitize($this->request->getpost());
-            $user=$this->collection->findUser($user);
+            $escaper = new \Frontend\Components\MyEscaper();
+            $user = $escaper->sanitize($this->request->getpost());
+            $user = $this->collection->findUser($user);
             $this->frontendSession->set('userId', $user->_id);
             $this->frontendSession->set('userName', $user->name);
             $this->frontendSession->set('userRole', $user->role);
@@ -42,19 +41,18 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function signupAction()
+    public function signupAction(): void
     {
         if ($this->request->isPost()) {
-            $escaper=new \Frontend\Components\MyEscaper();
-            $user=$escaper->sanitize($this->request->getpost());
-            $user['role']='user';
-            $userId=$this->collection->add($user);
+            $escaper = new \Frontend\Components\MyEscaper();
+            $user = $escaper->sanitize($this->request->getpost());
+            $user['role'] = 'user';
+            $userId = $this->collection->add($user);
             if (isset($userId)) {
-                $this->view->token = $this->helper->getToken((string)$userId);
+                $this->view->token = 'Created!';
             } else {
-                $this->view->token= "Something went wrong user not created!";
+                $this->view->token = 'Something went wrong user not created!';
             }
-            
         }
     }
     /**
@@ -62,7 +60,7 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function logoutAction()
+    public function logoutAction(): void
     {
         $this->frontendSession->destroy();
         $this->response->redirect('/frontend/users/login');

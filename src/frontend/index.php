@@ -1,37 +1,30 @@
 <?php
 
-use Phalcon\Di\FactoryDefault;
-//Required class for loader
-use Phalcon\Loader;
-use Phalcon\Mvc\View;
-use Phalcon\Mvc\Application;
-use Phalcon\Url;
-use Phalcon\Config;
-use Phalcon\Config\ConfigFactory;
-/**
- * Required classes for session
- */
-use Phalcon\Session\Manager;
-use Phalcon\Session\Adapter\Stream;
+declare(strict_types=1);
+
 use GuzzleHttp\Client;
-/**
- * Phalcon Debug
- */
-use \Phalcon\Debug;
+use Phalcon\Config\ConfigFactory;
+use Phalcon\Debug;
+use Phalcon\Di\FactoryDefault;
+use Phalcon\Loader;
+use Phalcon\Mvc\Application;
+use Phalcon\Mvc\View;
+use Phalcon\Session\Adapter\Stream;
+use Phalcon\Session\Manager;
+use Phalcon\Url;
+
 (new Debug())->listen();
-
-$config = new Config([]);
-
 $container = new FactoryDefault();
-
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/frontend');
-$_SERVER['REQUEST_URI'] = str_replace("/frontend/", "/", $_SERVER['REQUEST_URI']);
-
+$_SERVER['REQUEST_URI'] = str_replace(
+    '/frontend/',
+    '/',
+    $_SERVER['REQUEST_URI']
+);
 //Vendor file
-require_once("./vendor/autoload.php");
-
+require_once './vendor/autoload.php';
 //Loader-----start----
 $loader = new Loader();
 /**
@@ -39,7 +32,7 @@ $loader = new Loader();
  */
 $loader->registerNamespaces(
     [
-        'Frontend\Components'=>'./components'
+        'Frontend\Components' => './components',
     ]
 );
 /**
@@ -47,13 +40,12 @@ $loader->registerNamespaces(
  */
 $loader->registerDirs(
     [
-        APP_PATH . "/controllers/",
-        APP_PATH . "/models/",
+        APP_PATH . '/controllers/',
+        APP_PATH . '/models/',
     ]
 );
 $loader->register();
 //loader-----end-------
-
 /**
  * Di container for view
  */
@@ -85,43 +77,44 @@ $container->setShared(
         return new \Frontend\Components\Helper();
     }
 );
-
 /**
- * Container for config 
+ * Container for config
  * Contains neccessory variables
  */
 $container->set(
     'config',
     function () {
-        $file='./config/config.php';
-        $factory=new ConfigFactory();
+        $file = './config/config.php';
+        $factory = new ConfigFactory();
         return $factory->newInstance('php', $file);
     }
 );
-
-
 /**
  * Mongo DB container
  */
 $container->set(
     'mongo',
     function () {
-        $config=$this->get('config')->db;
-        $mongo = new \MongoDB\Client("mongodb://mongo", array("username" => $config->username, "password" => $config->password));
+        $config = $this->get('config')->db;
+        $mongo = new \MongoDB\Client(
+            'mongodb://mongo',
+            [
+                'username' => $config->username,
+                'password' => $config->password,
+            ]
+        );
         return $mongo->store_api_frontend;
     },
     true
 );
-
 //Di container for guzzle client
 $container->set(
     'clients',
-    function() {
-        $client = new Client([
+    function () {
+        return new Client([
             // Base URI is used with relative requests
             'base_uri' => '192.168.2.50:8080/api/',
         ]);
-        return $client;
     },
     true
 );
@@ -150,7 +143,7 @@ $application = new Application($container);
 try {
     // Handle the request
     $response = $application->handle(
-        $_SERVER["REQUEST_URI"]
+        $_SERVER['REQUEST_URI']
     );
 
     $response->send();

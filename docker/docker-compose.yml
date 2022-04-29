@@ -8,15 +8,7 @@ services:
     volumes:
       - "../src/:/var/www/html/"
     ports:
-      - "8080:80"
-  mysql-server:
-    image: mysql:8.0.19
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-    volumes:
-      - mysql-data:/var/lib/mysql
-      
+      - "8080:80" 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.0.1
     restart: always

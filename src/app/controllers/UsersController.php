@@ -1,17 +1,13 @@
 <?php
 
-use Phalcon\Mvc\Controller;
-use Firebase\JWT\JWT;
+declare(strict_types=1);
 
-class UsersController extends Controller
+use Firebase\JWT\JWT;
+use Phalcon\Mvc\Controller;
+
+final class UsersController extends Controller
 {
-    /**
-     * Constructor to initialize the object of users model
-     *
-     * @var [object]
-     */
-    public $collection;
-    public function initialize()
+    public function initialize(): void
     {
         $this->collection = new Users();
     }
@@ -21,36 +17,35 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function loginAction()
+    public function loginAction(): void
     {
         if ($this->request->isPost()) {
-            $user=$this->collection->findUser($this->request->getPost());
+            $user = $this->collection->findUser($this->request->getPost());
             $this->session->set('userId', $user->_id);
             $this->session->set('userName', $user->name);
             $this->session->set('userRole', $user->role);
             $this->response->redirect('/app/orders');
         }
     }
-
     /**
      * User registration
      * token generate
      *
-     * @return void
+     * @return string
      */
     public function signupAction()
     {
         if ($this->request->isPost()) {
-            $user=$this->request->getPost();
-            $user['role']='user';
-            $userId=$this->collection->add($user);
-            // die($userId);
-            $key = "example_key";
+            $user = $this->request->getPost();
+            $user['role'] = 'user';
+            $userId = $this->collection->add($user);
+            
+            $key = 'example_key';
             $now = new \DateTimeImmutable();
             $payload = array(
-                "iat" => $now->getTimestamp(),
-                "nbf" => $now->modify('-1 minute')->getTimestamp(),
-                "exp" => $now->modify('+1 days')->getTimestamp(),
+                'iat' => $now->getTimestamp(),
+                'nbf' => $now->modify('-1 minute')->getTimestamp(),
+                'exp' => $now->modify('+1 days')->getTimestamp(),
                 'sub' => 'api_token',
                 'uid' => (string)$userId,
                 'rol' => 'user',
@@ -64,7 +59,7 @@ class UsersController extends Controller
      *
      * @return void
      */
-    public function logoutAction()
+    public function logoutAction(): void
     {
         $this->session->destroy();
         $this->response->redirect('/app/users/login');

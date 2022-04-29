@@ -1,73 +1,76 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Model;
 
-class Products extends Model
+final class Products extends Model
 {
-    //Collection
-    public $collection;
     /**
      * Constructor to initialize the collection
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->collection = $this->di->get('mongo')->products;
     }
-
     /**
      * Add product to collection
      *
-     * @param [array] $product
-     * takes product information as array
+     * @param array $product
+     * 
      * @return void
      */
-    public function addMany($products)
+    public function addMany(array $products): void
     {
         $this->collection->insertMany($products);
     }
-
     /**
      * To get details of all the products
      *
-     * @return void
+     * @return array
      */
     public function getProducts()
     {
         return $this->collection->find();
     }
-
     /**
      * Add product
-     *
-     * @param [array] $product
+     * 
+     * @param array $product
+     * 
      * @return void
      */
-    public function add($product)
+    public function add(array $product): void
     {
         $this->collection->insertOne($product);
     }
-
     /**
      * Find product by ID
      *
-     * @param [string] $id
-     * @return void
+     * @param string $id
+     * 
+     * @return array
      */
-    public function findProduct($id)
+    public function findProduct(string $id)
     {
-        return $this->collection->findOne(['_id' => new MongoDB\BSON\ObjectID($id)]);
+        return $this->collection->findOne(
+            ['_id' => new MongoDB\BSON\ObjectID($id)]
+        );
     }
-
     /**
-     * Update product 
+     * Update product
      *
-     * @param [array] $data
+     * @param array $data
+     * 
      * @return void
      */
-    public function updateProduct($data)
+    public function updateProduct(array $data): void
     {
-        $this->collection->updateOne(['_id' => new MongoDB\BSON\ObjectID($data['updatedId'])],['$set'=>$data['field']]);
+        $this->collection->updateOne(
+            ['_id' => new MongoDB\BSON\ObjectID($data['updatedId'])],
+            ['$set' => $data['field']]
+        );
     }
 }

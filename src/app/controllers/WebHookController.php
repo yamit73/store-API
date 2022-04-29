@@ -1,22 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Controller;
 
-class WebHookController extends Controller
+final class WebHookController extends Controller
 {
-    public $helper;
-    public $collection;
-    function initialize()
+    /**
+     * initializing neccessary objects
+     *
+     * @return void
+     */
+    public function initialize(): void
     {
-        $this->helper= new \App\Components\Helper();
-        $this->collection= new WebHooks();
+        $this->helper = new \App\Components\Helper();
+        $this->collection = new WebHooks();
     }
     /**
      * Add hooks to database
      *
      * @return void
      */
-    public function indexAction()
+    public function indexAction(): void
     {
         //Check if User is logged in
         if (!$this->helper->userLogin()) {

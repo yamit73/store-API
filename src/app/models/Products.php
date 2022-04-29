@@ -1,21 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Model;
 
 class Products extends Model
 {
-    //Collection
-    public $collection;
     /**
      * Constructor to initialize the collection
      *
      * @return void
      */
-    public function initialize()
+    public function initialize(): void
     {
         $this->collection = $this->di->get('mongo')->products;
     }
-
     /**
      * Add product to collection
      *
@@ -25,44 +24,61 @@ class Products extends Model
      */
     public function add($product)
     {
-        return ($this->collection->insertOne($product))->getInsertedId();
+        return $this->collection->insertOne($product)->getInsertedId();
     }
-
     /**
      * To get details of all the products
      *
-     * @return void
+     * @return array
      */
     public function getProducts()
     {
         return $this->collection->find();
     }
-
     /**
      * Search keywords and if matched return that document
      *
-     * @param [array] $keys
+     * @param array $keys
      * @return array  Products
      */
-    public function searchProduct($keys)
+    public function searchProduct(array $keys)
     {
-        return $this->collection->find(['$or' => $keys]);
+        return $this->collection->find(
+            [
+                '$or' => $keys
+            ]
+        );
     }
-
-    public function findProduct($id)
-    {
-        return $this->collection->findOne(['_id' => new MongoDB\BSON\ObjectID($id)]);
-    }
-    
     /**
-     * Add product to collection
+     * Undocumented function
      *
-     * @param [array] $product
-     * takes product information as array
-     * @return void
+     * @param string $id
+     * @return array
      */
-    public function updateProduct($product, $id)
+    public function findProduct(string $id)
     {
-        return ($this->collection->updateOne(['_id' => new MongoDB\BSON\ObjectID($id)], ['$set' => $product]))->getModifiedCount();
+        return $this->collection->findOne(
+            [
+                '_id' => new MongoDB\BSON\ObjectID($id)
+            ]
+        );
+    }
+    /**
+     * Undocumented function
+     *
+     * @param array $product
+     * @param string $id
+     * @return int
+     */
+    public function updateProduct(array $product, string $id)
+    {
+        return $this->collection->updateOne(
+            [
+                '_id' => new MongoDB\BSON\ObjectID($id),
+            ],
+            [
+                '$set' => $product,
+            ]
+        )->getModifiedCount();
     }
 }

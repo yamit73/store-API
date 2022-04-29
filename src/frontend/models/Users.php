@@ -1,35 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 use Phalcon\Mvc\Model;
 
-class Users extends Model
+final class Users extends Model
 {
-        //Collection
-        public $collection;
-        /**
-         * Constructor to initialize the collection
-         *
-         * @return void
-         */
-        public function initialize()
-        {
-            $this->collection=$this->di->get('mongo')->users;
-        }
-    
-        /**
-         * Add user to collection
-         *
-         * @param [array] $user
-         * takes user information as array
-         * @return void
-         */
-        public function add($user)
-        {
-            return $this->collection->insertOne($user)->getInsertedId();
-        }
-
-        public function findUser($user)
-        {
-            return $this->collection->findOne(['$and'=>[$user]]);
-        }
+    /**
+     * Constructor to initialize the collection
+     *
+     * @return void
+     */
+    public function initialize(): void
+    {
+        $this->collection = $this->di->get('mongo')->users;
+    }
+    /**
+     * Add user to collection
+     *
+     * @param array $user
+     * 
+     * @return array
+     */
+    public function add(array $user)
+    {
+        return $this->collection->insertOne($user)->getInsertedId();
+    }
+    /**
+     * Find user using ID and Passwrd
+     *
+     * @param array $user
+     * 
+     * @return array
+     */
+    public function findUser(array $user)
+    {
+        return $this->collection->findOne(['$and' => [$user]]);
+    }
 }
